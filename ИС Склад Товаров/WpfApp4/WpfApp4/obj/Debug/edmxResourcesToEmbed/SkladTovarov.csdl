@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="ИС_СкладModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Доставка">
+    <Key>
+      <PropertyRef Name="Код_товара" />
+    </Key>
+    <Property Name="Код_товара" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Наименование" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Имя_поставщика" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Количество" Type="Int32" Nullable="false" />
+    <Property Name="Статус" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="ТоварыНаСкладе" Relationship="Self.FK_Доставка_ТоварыНаСкладе" FromRole="Доставка" ToRole="ТоварыНаСкладе" />
+  </EntityType>
+  <EntityType Name="Поставщик">
+    <Key>
+      <PropertyRef Name="Код_товара" />
+    </Key>
+    <Property Name="Имя_поставщика" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Наименование" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="Количесвтво_вшт" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="Код_товара" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+    <NavigationProperty Name="ТоварыНаСкладе" Relationship="Self.FK_ТоварыНаСкладе_Поставщик" FromRole="Поставщик" ToRole="ТоварыНаСкладе" />
+  </EntityType>
+  <EntityType Name="ТоварыНаСкладе">
+    <Key>
+      <PropertyRef Name="Код_товара" />
+    </Key>
+    <Property Name="Код_товара" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Наименование" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Имя_поставщика" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Количество_вшт" Type="Int32" Nullable="false" />
+    <Property Name="Статус" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Доставка" Relationship="Self.FK_Доставка_ТоварыНаСкладе" FromRole="ТоварыНаСкладе" ToRole="Доставка" />
+    <NavigationProperty Name="Поставщик" Relationship="Self.FK_ТоварыНаСкладе_Поставщик" FromRole="ТоварыНаСкладе" ToRole="Поставщик" />
+  </EntityType>
+  <Association Name="FK_Доставка_ТоварыНаСкладе">
+    <End Role="ТоварыНаСкладе" Type="Self.ТоварыНаСкладе" Multiplicity="1" />
+    <End Role="Доставка" Type="Self.Доставка" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="ТоварыНаСкладе">
+        <PropertyRef Name="Код_товара" />
+      </Principal>
+      <Dependent Role="Доставка">
+        <PropertyRef Name="Код_товара" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ТоварыНаСкладе_Поставщик">
+    <End Role="Поставщик" Type="Self.Поставщик" Multiplicity="1" />
+    <End Role="ТоварыНаСкладе" Type="Self.ТоварыНаСкладе" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Поставщик">
+        <PropertyRef Name="Код_товара" />
+      </Principal>
+      <Dependent Role="ТоварыНаСкладе">
+        <PropertyRef Name="Код_товара" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="ИС_СкладEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+    <EntitySet Name="Доставка" EntityType="Self.Доставка" />
+    <EntitySet Name="Поставщик" EntityType="Self.Поставщик" />
+    <EntitySet Name="ТоварыНаСкладе" EntityType="Self.ТоварыНаСкладе" />
+    <AssociationSet Name="FK_Доставка_ТоварыНаСкладе" Association="Self.FK_Доставка_ТоварыНаСкладе">
+      <End Role="ТоварыНаСкладе" EntitySet="ТоварыНаСкладе" />
+      <End Role="Доставка" EntitySet="Доставка" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ТоварыНаСкладе_Поставщик" Association="Self.FK_ТоварыНаСкладе_Поставщик">
+      <End Role="Поставщик" EntitySet="Поставщик" />
+      <End Role="ТоварыНаСкладе" EntitySet="ТоварыНаСкладе" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Хранилище ИС_СкладModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="principal_id" Type="int" Nullable="false" />
+    <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="version" Type="int" />
+    <Property Name="definition" Type="varbinary(max)" />
+  </EntityType>
+  <EntityType Name="Доставка">
+    <Key>
+      <PropertyRef Name="Код_товара" />
+    </Key>
+    <Property Name="Код_товара" Type="varchar" MaxLength="10" Nullable="false" />
+    <Property Name="Наименование" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="Имя_поставщика" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="Количество" Type="int" Nullable="false" />
+    <Property Name="Статус" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="Поставщик">
+    <Key>
+      <PropertyRef Name="Код_товара" />
+    </Key>
+    <Property Name="Имя_поставщика" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="Наименование" Type="nchar" MaxLength="10" Nullable="false" />
+    <Property Name="Количесвтво_вшт" Type="nchar" MaxLength="10" Nullable="false" />
+    <Property Name="Код_товара" Type="varchar" MaxLength="10" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ТоварыНаСкладе">
+    <Key>
+      <PropertyRef Name="Код_товара" />
+    </Key>
+    <Property Name="Код_товара" Type="varchar" MaxLength="10" Nullable="false" />
+    <Property Name="Наименование" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="Имя_поставщика" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="Количество_вшт" Type="int" Nullable="false" />
+    <Property Name="Статус" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_Доставка_ТоварыНаСкладе">
+    <End Role="ТоварыНаСкладе" Type="Self.ТоварыНаСкладе" Multiplicity="1" />
+    <End Role="Доставка" Type="Self.Доставка" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="ТоварыНаСкладе">
+        <PropertyRef Name="Код_товара" />
+      </Principal>
+      <Dependent Role="Доставка">
+        <PropertyRef Name="Код_товара" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ТоварыНаСкладе_Поставщик">
+    <End Role="Поставщик" Type="Self.Поставщик" Multiplicity="1" />
+    <End Role="ТоварыНаСкладе" Type="Self.ТоварыНаСкладе" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Поставщик">
+        <PropertyRef Name="Код_товара" />
+      </Principal>
+      <Dependent Role="ТоварыНаСкладе">
+        <PropertyRef Name="Код_товара" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="Хранилище ИС_СкладModelContainer">
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Доставка" EntityType="Self.Доставка" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Поставщик" EntityType="Self.Поставщик" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ТоварыНаСкладе" EntityType="Self.ТоварыНаСкладе" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_Доставка_ТоварыНаСкладе" Association="Self.FK_Доставка_ТоварыНаСкладе">
+      <End Role="ТоварыНаСкладе" EntitySet="ТоварыНаСкладе" />
+      <End Role="Доставка" EntitySet="Доставка" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ТоварыНаСкладе_Поставщик" Association="Self.FK_ТоварыНаСкладе_Поставщик">
+      <End Role="Поставщик" EntitySet="Поставщик" />
+      <End Role="ТоварыНаСкладе" EntitySet="ТоварыНаСкладе" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
